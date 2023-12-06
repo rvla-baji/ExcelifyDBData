@@ -16,7 +16,7 @@
 	<description>Spring Boot project to read data from database and generate
 		excel sheet</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
