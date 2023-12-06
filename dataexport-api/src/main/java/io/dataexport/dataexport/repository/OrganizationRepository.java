@@ -9,6 +9,6 @@ import io.dataexport.dataexport.entity.Organization;
 
 @Repository
 public interface OrganizationRepository extends PagingAndSortingRepository<Organization, Integer> {
-	
+
 	List<Organization> findAll();
 }
