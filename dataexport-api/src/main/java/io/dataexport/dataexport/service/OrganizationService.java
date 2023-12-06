@@ -2,9 +2,9 @@ package io.dataexport.dataexport.service;
 
 import java.util.List;
 
-import io.dataexport.dataexport.entity.Organization;
+import io.dataexport.dataexport.model.OrganizationDTO;
 
 public interface OrganizationService {
 
-	List<Organization> convertTableDatatoJsonList();
+	List<OrganizationDTO> convertTableDatatoJsonList();
 }
