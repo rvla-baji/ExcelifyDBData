@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.dataexport.dataexport.entity.Organization;
+import io.dataexport.dataexport.model.OrganizationDTO;
 import io.dataexport.dataexport.service.OrganizationService;
 
 @RestController
@@ -28,9 +28,9 @@ public class OrganizationController {
 	@GetMapping("/organzTble")
 	public ResponseEntity<String> fetchDataFromDBTable() throws JsonProcessingException {
 
-		List<Organization> tableDataList = organizationService.convertTableDatatoJsonList();
+		List<OrganizationDTO> dtoList = organizationService.convertTableDatatoJsonList();
 
-		String jsonString = objectMapper.writeValueAsString(tableDataList);
+		String jsonString = objectMapper.writeValueAsString(dtoList);
 
 		return new ResponseEntity<>(jsonString, HttpStatus.OK);
 
