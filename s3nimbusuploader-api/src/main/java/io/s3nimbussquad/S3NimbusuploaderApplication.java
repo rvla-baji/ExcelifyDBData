@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class S3nimbusuploaderApplication {
+public class S3NimbusuploaderApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(S3nimbusuploaderApplication.class, args);
+		SpringApplication.run(S3NimbusuploaderApplication.class, args);
 	}
 
 }
