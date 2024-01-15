@@ -1,5 +1,6 @@
 package io.dataexport.dataexport.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import io.dataexport.dataexport.entity.Organization;
 import io.dataexport.dataexport.model.OrganizationDTO;
 import io.dataexport.dataexport.repository.OrganizationRepository;
 import io.dataexport.dataexport.service.OrganizationService;
+import io.dataexport.dataexport.util.GenerateExcelUtil;
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
@@ -21,25 +23,33 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Autowired
 	private OrganizationRepository organizationRepository;
 
+	@Autowired
+	private GenerateExcelUtil generateExcelUtil;
+
 	@Override
-	public List<OrganizationDTO> convertTableDatatoJsonList() {
+	public ByteArrayInputStream convertTableDatatoJsonList() {
+		try {
+			List<OrganizationDTO> orgDtoList = new ArrayList<OrganizationDTO>();
 
-		List<OrganizationDTO> orgDtoList = new ArrayList<OrganizationDTO>();
+			List<Organization> fetchedDataList = organizationRepository.findAll();
 
-		List<Organization> fetchedDataList = organizationRepository.findAll();
+			logger.info("*** Fetched data list is **** {}", fetchedDataList);
 
-		logger.info("*** Fetched data list is **** {}", fetchedDataList);
+			fetchedDataList.forEach(organization -> {
+				OrganizationDTO organizationDTO = new OrganizationDTO();
+				organizationDTO.setEmpId(organization.getEmpId());
+				organizationDTO.setEmpLocation(organization.getEmpLocation());
+				organizationDTO.setEmpName(organization.getEmpName());
+				organizationDTO.setEmpTechnology(organization.getEmpTechnology());
+				orgDtoList.add(organizationDTO);
+			});
+			logger.info("Mapping :-> Entity to DTO completed....!!!");
 
-		fetchedDataList.forEach(organization -> {
-			OrganizationDTO organizationDTO = new OrganizationDTO();
-			organizationDTO.setEmpId(organization.getEmpId());
-			organizationDTO.setEmpLocation(organization.getEmpLocation());
-			organizationDTO.setEmpName(organization.getEmpName());
-			organizationDTO.setEmpTechnology(organization.getEmpTechnology());
-			orgDtoList.add(organizationDTO);
-		});
+			return generateExcelUtil.createExcelFile(orgDtoList);
+		}
 
-		return orgDtoList;
+		catch (Exception e) {
+			return null;
+		}
 	}
-
 }

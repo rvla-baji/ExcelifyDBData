@@ -1,39 +1,35 @@
 package io.dataexport.dataexport.controller;
 
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
+import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.dataexport.dataexport.model.OrganizationDTO;
 import io.dataexport.dataexport.service.OrganizationService;
 
 @RestController
-@RequestMapping("/dataexport")
+@RequestMapping("/dataExport")
 public class OrganizationController {
-
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	@Autowired
 	private OrganizationService organizationService;
 
-	@GetMapping("/organzTble")
-	public ResponseEntity<String> fetchDataFromDBTable() throws JsonProcessingException {
+	@GetMapping("/download/excel")
+	public ResponseEntity<byte[]> downloadExcelFile() throws IOException {
 
-		List<OrganizationDTO> dtoList = organizationService.convertTableDatatoJsonList();
-
-		String jsonString = objectMapper.writeValueAsString(dtoList);
-
-		return new ResponseEntity<>(jsonString, HttpStatus.OK);
-
+		ByteArrayInputStream streamOp = organizationService.convertTableDatatoJsonList();
+		byte[] excelFileContent = IOUtils.toByteArray(streamOp);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Disposition", "attachment; filename=organization_emp_details.xlsx");
+		headers.setContentType(
+				MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+		return ResponseEntity.ok().headers(headers).body(excelFileContent);
 	}
-
 }
