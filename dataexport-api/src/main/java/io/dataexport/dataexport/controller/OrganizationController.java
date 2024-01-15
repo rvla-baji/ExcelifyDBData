@@ -25,6 +25,11 @@ public class OrganizationController {
 	@Autowired
 	private OrganizationService organizationService;
 
+	@GetMapping("/hello")
+	public ResponseEntity<String> helloMsg() {
+		return new ResponseEntity<>("Hello, Data Export API Working......!!", HttpStatus.OK);
+	}
+
 	@GetMapping("/organzTble")
 	public ResponseEntity<String> fetchDataFromDBTable() throws JsonProcessingException {
 
