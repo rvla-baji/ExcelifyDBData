@@ -27,7 +27,7 @@ public class OrganizationController {
 		ByteArrayInputStream streamOp = organizationService.convertTableDatatoJsonList();
 		byte[] excelFileContent = IOUtils.toByteArray(streamOp);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Disposition", "attachment; filename=employees.xlsx");
+		headers.add("Content-Disposition", "attachment; filename=organization_emp_details.xlsx");
 		headers.setContentType(
 				MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
 		return ResponseEntity.ok().headers(headers).body(excelFileContent);
