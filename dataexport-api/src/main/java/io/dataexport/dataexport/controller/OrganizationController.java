@@ -1,44 +1,34 @@
 package io.dataexport.dataexport.controller;
 
-import java.util.List;
+
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.dataexport.dataexport.model.OrganizationDTO;
 import io.dataexport.dataexport.service.OrganizationService;
 
 @RestController
-@RequestMapping("/dataexport")
+@RequestMapping("/dataExport")
 public class OrganizationController {
 
 	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Autowired
 	private OrganizationService organizationService;
+	
+	@GetMapping("/download/excel")
+	public ResponseEntity<ByteArrayInputStream> downloadExcelFile() throws IOException {
 
-	@GetMapping("/hello")
-	public ResponseEntity<String> helloMsg() {
-		return new ResponseEntity<>("Hello, Data Export API Working......!!", HttpStatus.OK);
-	}
+		ByteArrayInputStream streamOp = organizationService.convertTableDatatoJsonList();
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Disposition", "attachment; filename=employees.xlsx");
 
-	@GetMapping("/organzTble")
-	public ResponseEntity<String> fetchDataFromDBTable() throws JsonProcessingException {
-
-		List<OrganizationDTO> dtoList = organizationService.convertTableDatatoJsonList();
-
-		String jsonString = objectMapper.writeValueAsString(dtoList);
-
-		return new ResponseEntity<>(jsonString, HttpStatus.OK);
-
+		return ResponseEntity.ok().headers(headers).body(streamOp);
 	}
 
 }
