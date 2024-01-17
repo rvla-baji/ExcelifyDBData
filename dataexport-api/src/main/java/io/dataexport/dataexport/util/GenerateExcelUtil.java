@@ -2,6 +2,7 @@ package io.dataexport.dataexport.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -19,6 +20,9 @@ import io.dataexport.dataexport.model.OrganizationDTO;
 
 @Component
 public class GenerateExcelUtil {
+
+    String filePath = "C:\\Users\\bajir\\Downloads\\Org_Emp_Details.xlsx";
+
 
 	public ByteArrayInputStream createExcelFile(List<OrganizationDTO> orgDtoLost) throws IOException {
 
@@ -40,8 +44,8 @@ public class GenerateExcelUtil {
 			String[] columns = { "Emp_Id", "Emp_Name", "Emp_Technology", "Emp_Location" };
 			for (int i = 0; i < columns.length; i++) {
 				Cell cell = headerRow.createCell(i);
-				cell.setCellValue(" "+columns[i]+" ");
-			    cell.setCellStyle(headerCellStyle);
+				cell.setCellValue(" " + columns[i] + " ");
+				cell.setCellStyle(headerCellStyle);
 			}
 
 			// Create data rows for each employee
@@ -62,7 +66,21 @@ public class GenerateExcelUtil {
 			}
 
 			workbook.write(out);
+			generateExcelFileLocally(filePath, out);
 			return new ByteArrayInputStream(out.toByteArray());
+		}
+
+	}
+
+	private void generateExcelFileLocally(String filePath, ByteArrayOutputStream out) {
+
+		try (FileOutputStream fileOutStream = new FileOutputStream(filePath);) {
+
+			fileOutStream.write(out.toByteArray());
+
+			System.out.println("** File generated successfully **");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
