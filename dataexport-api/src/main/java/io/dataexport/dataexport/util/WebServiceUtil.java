@@ -1,26 +1,27 @@
 package io.dataexport.dataexport.util;
 
+import java.io.ByteArrayOutputStream;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.multipart.MultipartFile;
-
-import io.dataexport.dataexport.constants.DataExportConstants;
 
 @Component
 public class WebServiceUtil {
 
-	public String sendFileToNimbusService(MultipartFile multipartFile)
+	@Value("${nimbus.endpoint}")
+	private String nimbusEndPoint;
 
-	{
+	public void uploadToNimbusService(ByteArrayOutputStream arrayOutputStream) {
+
 		RestClient restClient = RestClient.create();
+		ResponseEntity<Void> response = restClient.post().uri(nimbusEndPoint)
+				.contentType(
+						MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+				.body(null).retrieve().toBodilessEntity();
+		System.out.println(response);
 
-		if (restClient != null) {
-			System.out.println("RestClient Obj Created");
-		}
-
-		return restClient.post().uri(DataExportConstants.NIMBUS_UPLOAD_END_POINT)
-				.contentType(MediaType.parseMediaType(MediaType.APPLICATION_OCTET_STREAM_VALUE)).body(multipartFile)
-				.retrieve().toString();
 	}
 }

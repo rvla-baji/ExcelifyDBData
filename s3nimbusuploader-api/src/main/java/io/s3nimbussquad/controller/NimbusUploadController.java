@@ -1,8 +1,7 @@
 package io.s3nimbussquad.controller;
 
-import io.s3nimbussquad.service.S3BucketService;
+import io.s3nimbussquad.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,31 +10,30 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/nimbusUpload")
+@RequestMapping("/nimbusDataUpload")
 public class NimbusUploadController {
 
-    S3BucketService s3BucketService;
+    private S3Service s3Service;
 
     @Autowired
-    public NimbusUploadController(S3BucketService s3BucketService) {
-        this.s3BucketService = s3BucketService;
+    NimbusUploadController(S3Service s3Service) {
+        this.s3Service = s3Service;
     }
 
-    @PostMapping("/s3bucket")
+    @PostMapping("/uploadToS3Bucket")
     public ResponseEntity<String> uploadXlsFileToS3Bucket(@RequestParam("multipartFile") MultipartFile multipartFile) {
-
+        String filename = multipartFile.getOriginalFilename();
         try {
-            if (multipartFile != null) {
-                return new ResponseEntity<>(
-                        "File Uploaded Successfully" + s3BucketService.uploadToS3Bucket(multipartFile), HttpStatus.OK);
+            if (!multipartFile.isEmpty()) {
+                String uuid = s3Service.uploadToS3Bucket(multipartFile);
+                String responseMessage = "File " + filename + " Uploaded Successfully.\n UUID: " + uuid;
+                return ResponseEntity.ok(responseMessage);
             } else {
-                return new ResponseEntity<>("Error Occured", HttpStatus.BAD_REQUEST);
+                return ResponseEntity.status(500).body("Please send file which consists data");
             }
-
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return new ResponseEntity<>("Error Occured", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to upload the file");
         }
-
     }
 }

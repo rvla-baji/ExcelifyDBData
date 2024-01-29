@@ -21,7 +21,7 @@ public class OrganizationController {
 	@Autowired
 	private OrganizationService organizationService;
 
-	@GetMapping("/download/excel")
+	@GetMapping("/downloadXls")
 	public ResponseEntity<byte[]> downloadExcelFile() throws IOException {
 
 		ByteArrayInputStream streamOp = organizationService.convertTableDatatoJsonList();

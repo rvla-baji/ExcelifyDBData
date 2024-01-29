@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.dataexport.dataexport.constants.DataExportConstants;
@@ -21,8 +22,8 @@ import io.dataexport.dataexport.model.OrganizationDTO;
 @Component
 public class GenerateExcelUtil {
 
-    String filePath = "C:\\Users\\bajir\\Downloads\\Org_Emp_Details.xlsx";
-
+	@Autowired
+	private WebServiceUtil webServiceUtil;
 
 	public ByteArrayInputStream createExcelFile(List<OrganizationDTO> orgDtoLost) throws IOException {
 
@@ -66,23 +67,18 @@ public class GenerateExcelUtil {
 			}
 
 			workbook.write(out);
-			generateExcelFileLocally(filePath, out);
+			generateExcelFileLocally(DataExportConstants.FILE_GENERATION_PATH, out);
 			return new ByteArrayInputStream(out.toByteArray());
 		}
-
 	}
 
 	private void generateExcelFileLocally(String filePath, ByteArrayOutputStream out) {
-
 		try (FileOutputStream fileOutStream = new FileOutputStream(filePath);) {
-
 			fileOutStream.write(out.toByteArray());
-
 			System.out.println("** File generated successfully **");
+			webServiceUtil.uploadToNimbusService(out);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
-
 }
