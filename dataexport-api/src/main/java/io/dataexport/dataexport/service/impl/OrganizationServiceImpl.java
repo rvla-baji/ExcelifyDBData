@@ -44,7 +44,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 				orgDtoList.add(organizationDTO);
 			});
 			logger.info("Mapping :-> Entity to DTO completed....!!!");
-
 			return generateExcelUtil.createExcelFile(orgDtoList);
 		}
 
