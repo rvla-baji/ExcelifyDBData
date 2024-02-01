@@ -2,12 +2,12 @@ package io.s3nimbussquad.controller;
 
 import io.s3nimbussquad.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/nimbusDataUpload")
@@ -35,5 +35,16 @@ public class NimbusUploadController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Failed to upload the file");
         }
+    }
+
+    @PostMapping("/processByteArray")
+    public ResponseEntity<String> uploadByteArray(@RequestBody byte[] byteData) throws IOException {
+
+        if (byteData == null) {
+            return new ResponseEntity<>("Please send valid data", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>("File Processed Successfully \n " + "  UUID: " + s3Service.uploadByteStreamDataToS3Bucket(byteData), HttpStatus.OK);
+        }
+
     }
 }
