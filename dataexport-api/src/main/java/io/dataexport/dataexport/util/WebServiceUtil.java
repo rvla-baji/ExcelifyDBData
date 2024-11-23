@@ -16,12 +16,12 @@ public class WebServiceUtil {
 
 	public void uploadToNimbusService(ByteArrayOutputStream arrayOutputStream) {
 
+		byte[] byteArray = arrayOutputStream.toByteArray();
+
 		RestClient restClient = RestClient.create();
-		ResponseEntity<Void> response = restClient.post().uri(nimbusEndPoint)
-				.contentType(
-						MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-				.body(null).retrieve().toBodilessEntity();
-		System.out.println(response);
+		ResponseEntity<String> responseEntity = restClient.post().uri(nimbusEndPoint)
+				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(byteArray).retrieve().toEntity(String.class);
+		System.out.println(responseEntity);
 
 	}
 }
