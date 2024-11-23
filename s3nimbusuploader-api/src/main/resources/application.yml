@@ -6,8 +6,8 @@ aws:
     bucket:
       name: voyager-excel-files-bucket
   region: ap-south-1
-  accessKeyId: AKIAZ2JHZUL7WWKGVGB2
-  secretKey: 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
+  accessKeyId: 
+  secretKey: 
 
 
 
