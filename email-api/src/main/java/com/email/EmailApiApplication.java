@@ -1,12 +1,13 @@
-package io.s3nimbussquad;
+package com.email;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication()
-public class S3NimbusUploaderApplication {
+@SpringBootApplication
+public class EmailApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(S3NimbusUploaderApplication.class, args);
+		SpringApplication.run(EmailApiApplication.class, args);
 	}
+
 }
